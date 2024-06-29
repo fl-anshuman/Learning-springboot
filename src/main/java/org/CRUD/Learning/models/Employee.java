@@ -3,6 +3,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.CRUD.Learning.customAnnotation.EncryptedField;
+import org.CRUD.Learning.customAnnotation.MaskedField;
+import org.CRUD.Learning.customAnnotation.MaskingStrategy;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 // @Document annotation is used to define the name of the collection in which the data will be stored.
@@ -12,12 +14,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 // @Id annotation is used to define the primary key.
 
 @Document
- @Data
+@Data
 public class Employee {
     @Id
     private  int id ;
     private String name;
     @EncryptedField
+    @MaskedField(strategy = MaskingStrategy.EMAIL)
     private String email;
     private String phone;
     // checking

@@ -1,107 +1,67 @@
-//package org.CRUD.Learning.controller;
-//
-//
-//import org.CRUD.Learning.models.Employee;
-//import org.CRUD.Learning.repository.EmployeeRepository;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.web.bind.annotation.*;
-//
-//import java.util.List;
-//
-//@RestController
-//public class EmployeeController {
-//
-//    @Autowired // This annotation is used to inject the object dependency implicitly.
-//    EmployeeRepository employeeRepository;
-//
-//    @PostMapping("/addEmployee")
-//    public String addEmployee(@RequestBody Employee employee){
-//
-//        employeeRepository.save(employee);
-//        return "data saved successfully";
-//    }
-//    @GetMapping("/getEmployee")
-//    public List<Employee> getEmployee(){
-//        System.out.println("requestReceived");
-//        return employeeRepository.findAll();
-//    }
-//    @GetMapping("/getEmployeeById/{id}")
-//    public Employee getEmployeeById(@PathVariable int id){
-//        return employeeRepository.findById(id).orElse(null);
-//    }
-//    @PutMapping("/updateEmployee")
-//    public String updateEmployee(@RequestBody Employee employee){
-//        Employee existingEmployee = employeeRepository.findById(employee.getId()).orElse(null);
-//        assert existingEmployee != null;
-//        existingEmployee.setName(employee.getName());
-//        existingEmployee.setEmail(employee.getEmail());
-//        existingEmployee.setPhone(employee.getPhone());
-//        employeeRepository.save(existingEmployee);
-//        return "data updated successfully";
-//    }
-//    @DeleteMapping("/deleteEmployee/{id}")
-//    public String deleteEmployee(@PathVariable int id){
-//        employeeRepository.deleteById(id);
-//        return "data deleted successfully";
-//    }
-//
-//}
 package org.CRUD.Learning.controller;
 
-
+import org.CRUD.Learning.customAnnotation.MaskingStrategy;
+import org.CRUD.Learning.dto.EmployeeDTO;
 import org.CRUD.Learning.models.Employee;
-import org.CRUD.Learning.repository.EmployeeRepository;
 import org.CRUD.Learning.services.EmployeeService;
+import org.CRUD.Learning.utils.MaskingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/employees")
 public class EmployeeController {
 
-    @Autowired // This annotation is used to inject the object dependency implicitly.
+    @Autowired
     EmployeeService employeeService;
 
-    @PostMapping("/addEmployee")
-    public String addEmployee(@RequestBody Employee employee){
+    @PostMapping
+    public ResponseEntity<String> addEmployee(@RequestBody Employee employee) {
         employeeService.addEmployee(employee);
-        return "data saved successfully";
-    }
-    @GetMapping("/getEmployee")
-    public List<Employee> getEmployee(){
-
-        System.out.println("requestReceived");
-        return employeeService.getEmployee();
-    }
-//    @GetMapping("/getEmployeeById/{id}")
-//    public Employee getEmployeeById(@PathVariable int id){
-//    return employeeService.getEmployeeById(id);
-//    }
-
-    @GetMapping("/getEmployeeById/{id}")
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable int id){
-        Optional<Employee> employee= Optional.ofNullable(employeeService.getEmployeeById(id));
-        if(employee.isPresent()){
-            return ResponseEntity.ok(employee.get());
-        }
-        else{
-            return ResponseEntity.notFound().build();
-        }
-
+        return ResponseEntity.ok("Data saved successfully");
     }
 
-    @PutMapping("/updateEmployee")
-    public String updateEmployee(@RequestBody Employee employee){
+    @GetMapping
+    public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
+        List<Employee> employees = employeeService.getEmployee();
+        List<EmployeeDTO> employeeDTOs = employees.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(employeeDTOs);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable int id) {
+        Optional<Employee> employee = Optional.ofNullable(employeeService.getEmployeeById(id));
+        System.out.println(employee);
+        return employee.map(emp -> ResponseEntity.ok(convertToDTO(emp)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PutMapping
+    public ResponseEntity<String> updateEmployee(@RequestBody Employee employee) {
         employeeService.updateEmployee(employee);
-        return "data updated successfully";
-    }
-    @DeleteMapping("/deleteEmployee/{id}")
-    public String deleteEmployee(@PathVariable int id){
-        employeeService.deleteEmployee(id);
-        return "data deleted successfully";
+        return ResponseEntity.ok("Data updated successfully");
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteEmployee(@PathVariable int id) {
+        employeeService.deleteEmployee(id);
+        return ResponseEntity.ok("Data deleted successfully");
+    }
+
+    private EmployeeDTO convertToDTO(Employee employee) {
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setId(employee.getId());
+        employeeDTO.setName(employee.getName());
+        employeeDTO.setPhone(MaskingUtil.mask(employee.getPhone(), MaskingStrategy.PHONE));
+        employeeDTO.setEmail(MaskingUtil.mask(employee.getEmail(), MaskingStrategy.EMAIL));
+
+        return employeeDTO;
+    }
 }
