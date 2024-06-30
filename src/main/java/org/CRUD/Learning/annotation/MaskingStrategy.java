@@ -1,4 +1,4 @@
-package org.CRUD.Learning.customAnnotation;
+package org.CRUD.Learning.annotation;
 
 public enum MaskingStrategy {
     EMAIL,

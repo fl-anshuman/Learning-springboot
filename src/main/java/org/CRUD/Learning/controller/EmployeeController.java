@@ -1,6 +1,6 @@
 package org.CRUD.Learning.controller;
 
-import org.CRUD.Learning.customAnnotation.MaskingStrategy;
+import org.CRUD.Learning.annotation.MaskingStrategy;
 import org.CRUD.Learning.dto.EmployeeDTO;
 import org.CRUD.Learning.models.Employee;
 import org.CRUD.Learning.services.EmployeeService;
@@ -59,9 +59,8 @@ public class EmployeeController {
         EmployeeDTO employeeDTO = new EmployeeDTO();
         employeeDTO.setId(employee.getId());
         employeeDTO.setName(employee.getName());
-        employeeDTO.setPhone(MaskingUtil.mask(employee.getPhone(), MaskingStrategy.PHONE));
-        employeeDTO.setEmail(MaskingUtil.mask(employee.getEmail(), MaskingStrategy.EMAIL));
-
+        employeeDTO.setEmail(employee.getEmail());
+        employeeDTO.setPhone(employee.getPhone());
         return employeeDTO;
     }
 }

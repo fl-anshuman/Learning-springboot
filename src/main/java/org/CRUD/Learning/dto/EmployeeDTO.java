@@ -1,7 +1,7 @@
 package org.CRUD.Learning.dto;
 
-import org.CRUD.Learning.customAnnotation.MaskedField;
-import org.CRUD.Learning.customAnnotation.MaskingStrategy;
+import org.CRUD.Learning.annotation.MaskedField;
+import org.CRUD.Learning.annotation.MaskingStrategy;
 import lombok.Data;
 
 @Data

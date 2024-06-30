@@ -2,10 +2,13 @@ package org.CRUD.Learning.interceptors;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.CRUD.Learning.annotation.MaskedField;
+import org.CRUD.Learning.utils.MaskingUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,7 +19,6 @@ public class MaskingInterceptor implements HandlerInterceptor {
             "/employees",
             "/employees/3",
             "/employees/5"
-
             // Add more URLs as needed
     );
 
@@ -25,7 +27,7 @@ public class MaskingInterceptor implements HandlerInterceptor {
         String requestURI = request.getRequestURI();
         System.out.println("Request URI: " + requestURI);
 
-        // Set the attribute to skip masking if the request URI matches any of the specified URLs
+
         if (URLS_TO_SKIP_MASKING.contains(requestURI)) {
             request.setAttribute("shouldMask", false);
         } else {
@@ -36,13 +38,10 @@ public class MaskingInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        // This method can remain as is, processing after the handler method execution
-    }
-
-    @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        // Optionally clear the attribute after processing
+      //remove the attribute after the request is completed
         request.removeAttribute("shouldMask");
     }
+//
+//
 }

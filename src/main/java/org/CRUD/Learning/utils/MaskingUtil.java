@@ -1,6 +1,6 @@
 package org.CRUD.Learning.utils;
 
-import org.CRUD.Learning.customAnnotation.MaskingStrategy;
+import org.CRUD.Learning.annotation.MaskingStrategy;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -12,6 +12,7 @@ public class MaskingUtil {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         Boolean shouldMask = (Boolean) request.getAttribute("shouldMask");
 
+            System.out.println("===="+shouldMask);
         // Check if masking should be applied based on interceptor decision
         if (shouldMask != null && !shouldMask) {
             return value; // Don't mask if shouldMask is false

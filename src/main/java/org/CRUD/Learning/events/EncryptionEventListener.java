@@ -1,11 +1,10 @@
 package org.CRUD.Learning.events;
 
-import org.CRUD.Learning.customAnnotation.EncryptedField;
+import org.CRUD.Learning.annotation.EncryptedField;
 import org.CRUD.Learning.utils.CryptoUtil;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
 import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent;
 import org.springframework.data.mongodb.core.mapping.event.AfterConvertEvent;
-import org.springframework.data.util.TypeInformation;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;

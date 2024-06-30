@@ -1,4 +1,4 @@
-package org.CRUD.Learning.customAnnotation;
+package org.CRUD.Learning.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,7 +7,5 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface MaskedField {
-    MaskingStrategy strategy();
+public @interface EncryptedField {
 }
-
