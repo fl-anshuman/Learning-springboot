@@ -1,10 +1,9 @@
 package org.CRUD.Learning.controller;
 
-import org.CRUD.Learning.annotation.MaskingStrategy;
+import org.CRUD.Learning.dto.CompanyDTO;
 import org.CRUD.Learning.dto.EmployeeDTO;
 import org.CRUD.Learning.models.Employee;
 import org.CRUD.Learning.services.EmployeeService;
-import org.CRUD.Learning.utils.MaskingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +37,6 @@ public class EmployeeController {
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable int id) {
         Optional<Employee> employee = Optional.ofNullable(employeeService.getEmployeeById(id));
-        System.out.println(employee);
         return employee.map(emp -> ResponseEntity.ok(convertToDTO(emp)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -53,6 +51,35 @@ public class EmployeeController {
     public ResponseEntity<String> deleteEmployee(@PathVariable int id) {
         employeeService.deleteEmployee(id);
         return ResponseEntity.ok("Data deleted successfully");
+    }
+
+    @GetMapping("/companies")
+    public ResponseEntity<List<CompanyDTO>> getAllCompanies() {
+        return ResponseEntity.ok(employeeService.getAllCompanies());
+    }
+
+    @GetMapping("/companies/{id}")
+    public ResponseEntity<CompanyDTO> getCompanyById(@PathVariable int id) {
+        CompanyDTO companyDTO = employeeService.getCompanyById(id);
+        return companyDTO != null ? ResponseEntity.ok(companyDTO) : ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/companies")
+    public ResponseEntity<String> addCompany(@RequestBody CompanyDTO companyDTO) {
+        employeeService.addCompany(companyDTO);
+        return ResponseEntity.ok("Company added successfully");
+    }
+
+    @PutMapping("/companies")
+    public ResponseEntity<String> updateCompany(@RequestBody CompanyDTO companyDTO) {
+        employeeService.updateCompany(companyDTO);
+        return ResponseEntity.ok("Company updated successfully");
+    }
+
+    @DeleteMapping("/companies/{id}")
+    public ResponseEntity<String> deleteCompany(@PathVariable int id) {
+        employeeService.deleteCompany(id);
+        return ResponseEntity.ok("Company deleted successfully");
     }
 
     private EmployeeDTO convertToDTO(Employee employee) {

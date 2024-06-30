@@ -13,18 +13,15 @@ public class MaskingUtil {
         Boolean shouldMask = (Boolean) request.getAttribute("shouldMask");
 
             System.out.println("===="+shouldMask);
-        // Check if masking should be applied based on interceptor decision
         if (shouldMask != null && !shouldMask) {
             return value; // Don't mask if shouldMask is false
         }
 
-        // Apply masking based on strategy
         switch (strategy) {
             case EMAIL:
                 return maskEmail(value);
             case PHONE:
                 return maskPhone(value);
-            // Add more cases as needed
             default:
                 return value;
         }
@@ -40,7 +37,6 @@ public class MaskingUtil {
     }
 
     private static String maskPhone(String phone) {
-        // Example masking for phone number
         return phone.replaceAll("\\d(?=\\d{4})", "*");
     }
 }
