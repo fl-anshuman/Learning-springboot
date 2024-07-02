@@ -5,6 +5,7 @@ import org.CRUD.Learning.annotation.MaskingStrategy;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.CRUD.Learning.constants.MaskingConstant;
 
 public class MaskingUtil {
 
@@ -12,7 +13,6 @@ public class MaskingUtil {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         Boolean shouldMask = (Boolean) request.getAttribute("shouldMask");
 
-            System.out.println("===="+shouldMask);
         if (shouldMask != null && !shouldMask) {
             return value; // Don't mask if shouldMask is false
         }
@@ -37,6 +37,6 @@ public class MaskingUtil {
     }
 
     private static String maskPhone(String phone) {
-        return phone.replaceAll("\\d(?=\\d{4})", "*");
+        return phone.replaceAll(MaskingConstant.MOBILE_REGEX, "*");
     }
 }
